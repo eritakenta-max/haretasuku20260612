@@ -1,9 +1,25 @@
 {
-  "name": "ここにアプリの正式名前",
-  "short_name": "ここに短い名前",
-  "description": "ここにアプリの説明文を入れる",
-  "start_url": "index.html",
+  "id": "/haretasuku/",
+  "name": "ハレタスク (haretasuku)",
+  "short_name": "ハレタスク",
+  "description": "タスクを効率的に管理して、毎日を晴れやかにするアプリです。",
+  "start_url": "./index.html",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#ffffff",
-  "theme_color": "#000000"
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
 }
