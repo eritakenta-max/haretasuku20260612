@@ -1,4 +1,4 @@
-const CACHE_NAME = 'haretasu-v1';
+const CACHE_NAME = 'haretasu-v2';
 const ASSETS = [
   './index.html',
   './style.css',
