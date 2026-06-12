@@ -849,3 +849,9 @@ document.addEventListener("DOMContentLoaded", () => {
     navigator.serviceWorker.register("./service-worker.js").catch(() => {});
   }
 });
+// ★通知を閉じるボタンの処理（一番最後に追加）
+document.addEventListener("click", e => {
+  if (e.target.closest(".tr-close")) {
+    document.getElementById("tarareba-overlay")?.classList.remove("open");
+  }
+});
