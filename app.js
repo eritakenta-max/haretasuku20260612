@@ -1,5 +1,7 @@
 // ========================================
 //  ハレタス - app.js
+//  v2.0: PWA対応版
+//  機能追加: カレンダーUI, 日跨ぎタラレバ, 通知
 // ========================================
 
 'use strict';
@@ -46,108 +48,71 @@ const CATEGORIES = ["ダイエット","筋トレ","貯金・節約","NISA","勉�
 
 const TARA_MESSAGES = {
   "ダイエット": [
-    "ワンサイズ下の服が着られていたかも",
-    "体が軽くなっていたかも",
-    "写真写りが変わっていたかも",
-    "あの時サラダチキンを選んでいタラ体が軽くなっていたかも",
-    "階段が楽になっていたかも",
+    "ワンサイズ下の服が着られていたかも","体が軽くなっていたかも","写真写りが変わっていたかも",
+    "あの時サラダチキンを選んでいタラ体が軽くなっていたかも","階段が楽になっていたかも",
     "お気に入りの服がもう少し似合っていたかも"
   ],
   "筋トレ": [
-    "腕が太くなっていたかも",
-    "腹筋が見えていたかも",
-    "自信がついていたかも",
-    "Tシャツ姿が変わっていたかも",
-    "姿勢が良くなっていたかも"
+    "腕が太くなっていたかも","腹筋が見えていたかも","自信がついていたかも",
+    "Tシャツ姿が変わっていたかも","姿勢が良くなっていたかも"
   ],
   "貯金・節約": [
-    "旅行資金が貯まっていたかも",
-    "欲しかった物が買えていたかも",
-    "将来の安心につながっていたかも",
-    "外食を減らしていタラ目標に近づいていたかも"
+    "旅行資金が貯まっていたかも","欲しかった物が買えていたかも",
+    "将来の安心につながっていたかも","外食を減らしていタラ目標に近づいていたかも"
   ],
   "NISA": [
-    "複利の力で資産が育っていたかも",
-    "将来の安心が近づいていたかも",
-    "未来の自分が感謝していたかも"
+    "複利の力で資産が育っていたかも","将来の安心が近づいていたかも","未来の自分が感謝していたかも"
   ],
   "勉強": [
-    "知識が積み重なっていたかも",
-    "試験に近づいていたかも",
-    "未来の選択肢が広がっていたかも",
-    "昨日より少し賢くなっていたかも"
+    "知識が積み重なっていたかも","試験に近づいていたかも",
+    "未来の選択肢が広がっていたかも","昨日より少し賢くなっていたかも"
   ],
   "家族・未来": [
-    "大切な人が喜んでいたかも",
-    "未来の安心が育っていたかも",
-    "家族の笑顔が増えていたかも"
+    "大切な人が喜んでいたかも","未来の安心が育っていたかも","家族の笑顔が増えていたかも"
   ],
   "開業・副業": [
-    "開業に一歩近づいていたかも",
-    "未来のお客様が増えていたかも",
-    "夢が少し近づいていたかも"
+    "開業に一歩近づいていたかも","未来のお客様が増えていたかも","夢が少し近づいていたかも"
   ],
   "健康": [
-    "体が喜んでいたかも",
-    "将来の医療費が減っていたかも",
-    "毎日が少し楽になっていたかも"
+    "体が喜んでいたかも","将来の医療費が減っていたかも","毎日が少し楽になっていたかも"
   ],
   "その他": [
-    "続けていタラ何かが変わっていたかも",
-    "未来の自分が喜んでいたかも",
+    "続けていタラ何かが変わっていたかも","未来の自分が喜んでいたかも",
     "小さな積み重ねが大きな変化になっていたかも"
   ]
 };
 
 const REBA_MESSAGES = {
   "ダイエット": [
-    "この調子で続けれバ理想の体型に近づく",
-    "未来の自分が鏡の前で微笑んでいる",
-    "継続が成果になっていく",
-    "ワンサイズ下の服が少し近づいた"
+    "この調子で続けれバ理想の体型に近づく","未来の自分が鏡の前で微笑んでいる",
+    "継続が成果になっていく","ワンサイズ下の服が少し近づいた"
   ],
   "筋トレ": [
-    "体は確実に変わり始めている",
-    "続ければ結果はついてくる",
-    "未来の筋肉貯金が増えた",
-    "あと少しで理想の体型が見えてくる"
+    "体は確実に変わり始めている","続ければ結果はついてくる",
+    "未来の筋肉貯金が増えた","あと少しで理想の体型が見えてくる"
   ],
   "貯金・節約": [
-    "未来の自由が増えている",
-    "目標に一歩近づいた",
-    "コツコツが大きな成果になる",
-    "未来の旅行資金が着実に育っている"
+    "未来の自由が増えている","目標に一歩近づいた",
+    "コツコツが大きな成果になる","未来の旅行資金が着実に育っている"
   ],
   "NISA": [
-    "複利が静かに働き始めている",
-    "未来の安心に着実に近づいている",
-    "今日の積立が未来を変える"
+    "複利が静かに働き始めている","未来の安心に着実に近づいている","今日の積立が未来を変える"
   ],
   "勉強": [
-    "知識は誰にも奪われない財産になった",
-    "未来の選択肢が一つ増えた",
-    "継続が最大の才能を証明している",
-    "脳が静かに成長している"
+    "知識は誰にも奪われない財産になった","未来の選択肢が一つ増えた",
+    "継続が最大の才能を証明している","脳が静かに成長している"
   ],
   "家族・未来": [
-    "大切な人への積立が増えた",
-    "未来の笑顔が近づいている",
-    "コツコツが家族の安心になる"
+    "大切な人への積立が増えた","未来の笑顔が近づいている","コツコツが家族の安心になる"
   ],
   "開業・副業": [
-    "未来のお客様が待っている",
-    "夢は行動した分だけ近づく",
-    "開業資金にまた一歩近づいた"
+    "未来のお客様が待っている","夢は行動した分だけ近づく","開業資金にまた一歩近づいた"
   ],
   "健康": [
-    "体は今日の努力を覚えている",
-    "健康な未来に近づいた",
-    "毎日の積み重ねが最高の投資"
+    "体は今日の努力を覚えている","健康な未来に近づいた","毎日の積み重ねが最高の投資"
   ],
   "その他": [
-    "続けることが最強の才能",
-    "未来の自分が感謝している",
-    "小さな積み重ねが大きな変化になる"
+    "続けることが最強の才能","未来の自分が感謝している","小さな積み重ねが大きな変化になる"
   ]
 };
 
@@ -168,6 +133,7 @@ let state = loadState();
 function defaultState() {
   return {
     tasks: [],
+    habits: [],
     goal: { text: "", category: "" },
     plantId: "sunflower",
     harePoints: 0,
@@ -176,7 +142,11 @@ function defaultState() {
     totalCompleted: 0,
     growthHistory: [],
     userTara: [],
-    userReba: []
+    userReba: [],
+    // 前日の達成状況を保存するためのフィールド
+    yesterdayStatus: null,  // { date, allDone, total, completed }
+    notifDismissed: false,
+    scheduledNotifications: {}  // taskId -> { time, timerId }
   };
 }
 
@@ -184,7 +154,10 @@ function loadState() {
   try {
     const s = JSON.parse(localStorage.getItem("haretasu_state") || "null");
     if (!s) return defaultState();
-    return Object.assign(defaultState(), s);
+    const merged = Object.assign(defaultState(), s);
+    if (!Array.isArray(merged.habits)) merged.habits = [];
+    if (!merged.scheduledNotifications) merged.scheduledNotifications = {};
+    return merged;
   } catch { return defaultState(); }
 }
 
@@ -201,7 +174,15 @@ function todayStr() {
 function fmtDate(str) {
   if (!str) return "";
   const d = new Date(str + "T00:00:00");
-  return `${d.getMonth()+1}/${d.getDate()}`;
+  const days = ["日","月","火","水","木","金","土"];
+  return `${d.getMonth()+1}/${d.getDate()}(${days[d.getDay()]})`;
+}
+
+function fmtDateTime(dateStr, timeStr) {
+  if (!dateStr) return "";
+  let s = fmtDate(dateStr);
+  if (timeStr) s += " " + timeStr;
+  return s;
 }
 
 function isOverdue(task) {
@@ -209,33 +190,47 @@ function isOverdue(task) {
   return task.dueDate < todayStr();
 }
 
-// ======== Today / overdue / future ========
+function daysAgo(n) {
+  const d = new Date();
+  d.setDate(d.getDate() - n);
+  return d.toISOString().slice(0, 10);
+}
+
+function dayDiff(a, b) {
+  const da = new Date(a + "T00:00:00");
+  const db = new Date(b + "T00:00:00");
+  return Math.abs(Math.round((da - db) / 86400000));
+}
+
+// ======== Task filters ========
 
 function getTodayTasks() {
   const t = todayStr();
   return state.tasks.filter(tk => !tk.done && (tk.dueDate === t || !tk.dueDate));
 }
-
 function getOverdueTasks() {
   const t = todayStr();
   return state.tasks.filter(tk => !tk.done && tk.dueDate && tk.dueDate < t);
 }
-
 function getFutureTasks() {
   const t = todayStr();
   return state.tasks.filter(tk => tk.dueDate && tk.dueDate > t);
 }
-
 function getDoneTasks() {
   const t = todayStr();
   return state.tasks.filter(tk => tk.done && tk.completedDate === t);
 }
 
-// ======== Points & growth ========
+// ======== Progress / sky ========
 
 function calcProgress() {
   const todayTasks = getTodayTasks().concat(getDoneTasks());
-  if (!todayTasks.length) return 0;
+  if (!todayTasks.length) {
+    // 習慣のみで計算
+    if (!state.habits.length) return 0;
+    const done = state.habits.filter(h => isHabitDoneToday(h)).length;
+    return done / state.habits.length;
+  }
   const done = todayTasks.filter(t => t.done).length;
   return done / todayTasks.length;
 }
@@ -243,7 +238,6 @@ function calcProgress() {
 function getPlant() {
   return PLANT_TYPES.find(p => p.id === state.plantId) || PLANT_TYPES[0];
 }
-
 function getPlantStage() {
   const pts = state.harePoints;
   if (pts < 50)  return 0;
@@ -252,42 +246,167 @@ function getPlantStage() {
   if (pts < 500) return 3;
   return 4;
 }
-
 function getSkyClass() {
   const p = calcProgress();
-  if (p === 0) return "cloudy";
-  if (p < 0.33) return "partly-cloudy";
-  if (p < 0.66) return "clear";
-  if (p < 1)    return "sunny";
+  if (p === 0)    return "cloudy";
+  if (p < 0.33)  return "partly-cloudy";
+  if (p < 0.66)  return "clear";
   return "sunny";
 }
-
 function getSkyLabel() {
   const p = calcProgress();
-  if (p === 0) return "☁️ くもり空 — タスクをやってみよう";
-  if (p < 0.33) return "⛅ 少し晴れてきた！";
-  if (p < 0.66) return "🌤️ いい調子！空が明るくなってきた";
-  if (p < 1)    return "☀️ もうすぐ快晴！あと少し！";
+  if (p === 0)   return "☁️ くもり空 — タスクをやってみよう";
+  if (p < 0.33)  return "⛅ 少し晴れてきた！";
+  if (p < 0.66)  return "🌤️ いい調子！空が明るくなってきた";
+  if (p < 1)     return "☀️ もうすぐ快晴！あと少し！";
   return "🌞 快晴！すばらしい！全タスク達成！";
 }
 
-// ======== Daily check ========
+// ======== Daily check & 日跨ぎタラレバ ========
 
 function dailyCheck() {
   const today = todayStr();
   if (state.lastDate === today) return;
 
-  // carry over logic: unfinished tasks become overdue (already handled by date)
-  // streak
-  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
-  if (state.lastDate === yesterday) {
-    // streak continues if yesterday had tasks done
-  } else if (state.lastDate && state.lastDate < yesterday) {
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+
+  // 前日のデータがあれば達成状況を記録
+  if (state.lastDate) {
+    const prevDate = state.lastDate;
+    const completedYesterday = state.tasks.filter(t => t.completedDate === prevDate).length;
+    const totalYesterday = state.tasks.filter(t => {
+      if (t.completedDate === prevDate) return true;
+      if (!t.done && (t.dueDate === prevDate || !t.dueDate)) return true;
+      return false;
+    }).length;
+
+    // 習慣も含める
+    const habitsDoneYesterday = state.habits.filter(h => h.logs && h.logs[prevDate]).length;
+    const totalItems = totalYesterday + state.habits.length;
+    const doneItems = completedYesterday + habitsDoneYesterday;
+
+    state.yesterdayStatus = {
+      date: prevDate,
+      total: totalItems,
+      completed: doneItems,
+      allDone: totalItems > 0 && doneItems >= totalItems
+    };
+  }
+
+  if (state.lastDate && state.lastDate < yesterday) {
     state.streak = 0;
   }
 
   state.lastDate = today;
   saveState();
+
+  // 翌日の日跨ぎ時にタラレバを表示
+  if (state.yesterdayStatus && state.yesterdayStatus.total > 0) {
+    setTimeout(() => showDailyTarareba(), 800);
+  }
+}
+
+function showDailyTarareba() {
+  const ys = state.yesterdayStatus;
+  if (!ys) return;
+
+  const cat = state.goal.category || "その他";
+  const type = ys.allDone ? "reba" : "tara";
+
+  // メッセージプール
+  const pool = type === "reba"
+    ? [...(REBA_MESSAGES[cat] || REBA_MESSAGES["その他"]), ...state.userReba.map(m => m.text)]
+    : [...(TARA_MESSAGES[cat] || TARA_MESSAGES["その他"]), ...state.userTara.map(m => m.text)];
+  const msg = pool[Math.floor(Math.random() * pool.length)];
+
+  const overlay = document.getElementById("daily-tarareba-overlay");
+  const card = document.getElementById("daily-tarareba-card");
+  if (!overlay || !card) return;
+
+  const d = new Date(ys.date + "T00:00:00");
+  const dateLabel = `${d.getMonth()+1}月${d.getDate()}日の振り返り`;
+
+  card.querySelector(".dtr-date").textContent = dateLabel;
+  const badge = card.querySelector(".dtr-type-badge");
+  badge.textContent = type === "reba" ? "レバ" : "タラ";
+  badge.className = `dtr-type-badge ${type}`;
+  card.querySelector(".dtr-emoji").textContent = type === "reba" ? "🌟" : "🌧️";
+  card.querySelector(".dtr-title").textContent = type === "reba"
+    ? "昨日は全タスク達成！すごい！"
+    : `昨日のタスク、${ys.completed}/${ys.total}件でした`;
+  card.querySelector(".dtr-message").textContent = msg;
+
+  const closeBtn = card.querySelector(".dtr-close");
+  closeBtn.textContent = type === "reba" ? "よっしゃー！今日も頑張る！" : "今日は頑張るぞ！";
+  closeBtn.className = `dtr-close ${type === "reba" ? "reba-style" : "tara-style"}`;
+
+  overlay.classList.add("open");
+
+  // 表示済みフラグ（今日は二度表示しない）
+  state.yesterdayStatus = null;
+  saveState();
+}
+
+// ======== Web Notifications ========
+
+let notifPermission = Notification.permission;
+
+function requestNotificationPermission() {
+  if (!("Notification" in window)) return;
+  Notification.requestPermission().then(result => {
+    notifPermission = result;
+    if (result === "granted") {
+      hideBanner();
+      scheduleAllNotifications();
+    }
+  });
+}
+
+function showNotifBanner() {
+  if (!("Notification" in window)) return;
+  if (Notification.permission === "granted") return;
+  if (Notification.permission === "denied") return;
+  if (state.notifDismissed) return;
+  const banner = document.getElementById("notif-banner");
+  if (banner) banner.classList.add("show");
+}
+
+function hideBanner() {
+  const banner = document.getElementById("notif-banner");
+  if (banner) banner.classList.remove("show");
+}
+
+// タスクの通知をスケジュール（ページ開いている間のみ有効）
+function scheduleNotification(task) {
+  if (!task.notifEnabled || !task.dueDate || !task.notifTime) return;
+  if (Notification.permission !== "granted") return;
+  if (task.done) return;
+
+  const now = new Date();
+  const targetTime = new Date(task.dueDate + "T" + task.notifTime + ":00");
+  const msUntil = targetTime - now;
+
+  if (msUntil <= 0) return; // 過去の時間は無視
+
+  // 既存のタイマーをクリア
+  if (window._notifTimers && window._notifTimers[task.id]) {
+    clearTimeout(window._notifTimers[task.id]);
+  }
+  if (!window._notifTimers) window._notifTimers = {};
+
+  window._notifTimers[task.id] = setTimeout(() => {
+    new Notification("ハレタス ⏰", {
+      body: `📋 ${task.name}`,
+      icon: "./manifest.json",
+      tag: "haretasu-task-" + task.id,
+      requireInteraction: false
+    });
+  }, msUntil);
+}
+
+function scheduleAllNotifications() {
+  if (Notification.permission !== "granted") return;
+  state.tasks.forEach(t => scheduleNotification(t));
 }
 
 // ======== Complete task ========
@@ -301,22 +420,183 @@ function completeTask(id) {
   state.harePoints += 10;
   state.totalCompleted++;
 
-  // check all today done
   const todayAll = getTodayTasks().concat(getDoneTasks());
   const allDone = todayAll.every(t => t.done);
   if (allDone && todayAll.length > 0) {
     state.harePoints += 20;
     state.streak++;
-    state.harePoints += 5; // streak bonus
+    state.harePoints += 5;
   }
 
   saveState();
   renderAll();
   spawnConfetti();
 
-  // show reba
   const cat = state.goal.category || "その他";
   showTarareba("reba", cat);
+}
+
+// ======== Habit Logic ========
+
+function calcHabitStreak(habit) {
+  const logs = habit.logs || {};
+  const today = todayStr();
+  let streak = 0;
+
+  if (habit.mode === "strict") {
+    let d = new Date(today + "T00:00:00");
+    while (true) {
+      const ds = d.toISOString().slice(0,10);
+      if (logs[ds]) { streak++; d.setDate(d.getDate() - 1); }
+      else break;
+    }
+  } else {
+    const sortedDays = Object.keys(logs).filter(d => logs[d]).sort().reverse();
+    if (!sortedDays.length) return 0;
+    const latestDone = sortedDays[0];
+    const diffFromToday = dayDiff(today, latestDone);
+    if (diffFromToday > 3) return 0;
+    streak = 1;
+    let prevDone = latestDone;
+    for (let i = 1; i < sortedDays.length; i++) {
+      const cur = sortedDays[i];
+      const gap = dayDiff(prevDone, cur);
+      if (gap <= 3) { streak++; prevDone = cur; }
+      else break;
+    }
+  }
+  return streak;
+}
+
+function isHabitDoneToday(habit) {
+  const today = todayStr();
+  return !!(habit.logs && habit.logs[today]);
+}
+
+function completeHabit(id) {
+  const habit = state.habits.find(h => h.id === id);
+  if (!habit) return;
+
+  const today = todayStr();
+  if (!habit.logs) habit.logs = {};
+
+  if (habit.logs[today]) {
+    delete habit.logs[today];
+    state.harePoints = Math.max(0, state.harePoints - 5);
+    state.totalCompleted = Math.max(0, state.totalCompleted - 1);
+  } else {
+    habit.logs[today] = true;
+    state.harePoints += 5;
+    state.totalCompleted++;
+    const streak = calcHabitStreak(habit);
+    if (streak > 0 && streak % 7 === 0) state.harePoints += 15;
+    spawnConfetti();
+    const cat = state.goal.category || "その他";
+    showTarareba("reba", cat);
+  }
+
+  saveState();
+  renderAll();
+}
+
+function saveHabit() {
+  const name = document.getElementById("habit-name-input").value.trim();
+  if (!name) { alert("習慣名を入力してね！"); return; }
+  const mode = document.getElementById("habit-mode-input").value;
+
+  if (editingHabitId) {
+    const h = state.habits.find(h => h.id === editingHabitId);
+    if (h) { h.name = name; h.mode = mode; }
+  } else {
+    state.habits.push({ id: Date.now().toString(), name, mode, logs: {}, createdAt: todayStr() });
+  }
+
+  saveState();
+  closeModal("habit-modal");
+  renderHabits();
+}
+
+function deleteHabit(id) {
+  if (!confirm("この習慣を削除する？")) return;
+  state.habits = state.habits.filter(h => h.id !== id);
+  saveState();
+  renderHabits();
+}
+
+function openEditHabit(id) {
+  const h = state.habits.find(h => h.id === id);
+  if (!h) return;
+  editingHabitId = id;
+  document.getElementById("habit-modal-title").textContent = "習慣を編集する 🔥";
+  document.getElementById("habit-name-input").value = h.name;
+  document.getElementById("habit-mode-input").value = h.mode;
+  document.querySelectorAll(".mode-btn").forEach(btn => {
+    btn.classList.toggle("selected", btn.dataset.mode === h.mode);
+  });
+  openModal("habit-modal");
+}
+
+// ======== Habit Render ========
+
+function renderHabits() {
+  const list = document.getElementById("habit-list");
+  list.innerHTML = "";
+
+  if (!state.habits.length) {
+    list.innerHTML = '<div class="empty-tasks">習慣を追加して毎日コツコツ続けよう🔥</div>';
+    return;
+  }
+
+  const today = todayStr();
+  const days7 = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    days7.push(d.toISOString().slice(0,10));
+  }
+  const dayLabels = ["日","月","火","水","木","金","土"];
+
+  state.habits.forEach(habit => {
+    const streak = calcHabitStreak(habit);
+    const doneToday = isHabitDoneToday(habit);
+    const modeLabel = habit.mode === "strict" ? "🔥 頑張る" : "🌱 ゆるく";
+
+    let dotsHtml = '<div class="habit-dots">';
+    days7.forEach(d => {
+      const done = !!(habit.logs && habit.logs[d]);
+      const isToday = d === today;
+      const dow = new Date(d + "T00:00:00").getDay();
+      let cls = "habit-dot";
+      if (isToday) cls += " today-dot";
+      if (done) cls += " done-dot";
+      else if (!isToday) cls += " missed-dot";
+      dotsHtml += `<div class="${cls}" title="${d}">${dayLabels[dow]}</div>`;
+    });
+    dotsHtml += '<span class="habit-dot-label">直近7日</span></div>';
+
+    const div = document.createElement("div");
+    div.className = "habit-item" + (doneToday ? " done-today" : "");
+    div.innerHTML = `
+      <div class="habit-item-top">
+        <button class="habit-check" data-habit-id="${habit.id}">${doneToday ? "✓" : ""}</button>
+        <div class="habit-info">
+          <div class="habit-name">${escHtml(habit.name)}</div>
+          <div class="habit-streak-row">
+            <span class="habit-streak-badge ${habit.mode === 'strict' ? 'fire' : 'leaf'}">
+              ${habit.mode === 'strict' ? '🔥' : '🌱'} ${streak}日継続
+            </span>
+            <span class="habit-mode-badge">${modeLabel}</span>
+          </div>
+        </div>
+        <div class="task-actions">
+          <button class="task-btn" data-habit-edit="${habit.id}" title="編集">✏️</button>
+          <button class="task-btn" data-habit-del="${habit.id}" title="削除">🗑️</button>
+        </div>
+      </div>
+      ${dotsHtml}
+    `;
+    list.appendChild(div);
+  });
 }
 
 // ======== Tarareba ========
@@ -325,7 +605,6 @@ function showTarareba(type, category) {
   const pool = type === "reba"
     ? [...(REBA_MESSAGES[category] || REBA_MESSAGES["その他"]), ...state.userReba.map(m => m.text)]
     : [...(TARA_MESSAGES[category] || TARA_MESSAGES["その他"]), ...state.userTara.map(m => m.text)];
-
   const msg = pool[Math.floor(Math.random() * pool.length)];
 
   const overlay = document.getElementById("tarareba-overlay");
@@ -336,17 +615,13 @@ function showTarareba(type, category) {
   const closeBtn = card.querySelector(".tr-close");
 
   if (type === "reba") {
-    typeEl.textContent = "レバ";
-    typeEl.className = "tr-type reba";
+    typeEl.textContent = "レバ"; typeEl.className = "tr-type reba";
     emojiEl.textContent = "🌟";
-    closeBtn.className = "tr-close reba-btn";
-    closeBtn.textContent = "やったー！";
+    closeBtn.className = "tr-close reba-btn"; closeBtn.textContent = "やったー！";
   } else {
-    typeEl.textContent = "タラ";
-    typeEl.className = "tr-type tara";
+    typeEl.textContent = "タラ"; typeEl.className = "tr-type tara";
     emojiEl.textContent = "🌧️";
-    closeBtn.className = "tr-close tara-btn";
-    closeBtn.textContent = "よし、やろう！";
+    closeBtn.className = "tr-close tara-btn"; closeBtn.textContent = "よし、やろう！";
   }
   msgEl.textContent = msg;
   overlay.classList.add("open");
@@ -375,7 +650,6 @@ function spawnConfetti() {
 
 function renderAll() {
   renderSky();
-  renderWordCard();
   renderPoints();
   renderPlant();
   renderTasks();
@@ -410,15 +684,9 @@ function renderSky() {
   }
 }
 
-function renderWordCard() {
-  const el = document.getElementById("word-today");
-  if (el) return; // already set at init
-}
-
 function renderPoints() {
   document.getElementById("pb-value").textContent = state.harePoints + " pt";
   document.getElementById("pb-streak").textContent = `🔥 ${state.streak}日連続達成`;
-
   const p = calcProgress();
   document.getElementById("progress-fill").style.width = Math.round(p * 100) + "%";
 }
@@ -440,6 +708,23 @@ let currentTab = "today";
 
 function renderTasks() {
   const list = document.getElementById("task-list");
+  const habitList = document.getElementById("habit-list");
+  const btnAdd = document.getElementById("btn-add-task");
+  const btnAddHabit = document.getElementById("btn-add-habit");
+
+  if (currentTab === "habit") {
+    list.style.display = "none";
+    habitList.style.display = "flex";
+    btnAdd.style.display = "none";
+    btnAddHabit.style.display = "block";
+    renderHabits();
+    return;
+  }
+
+  list.style.display = "flex";
+  habitList.style.display = "none";
+  btnAdd.style.display = "block";
+  btnAddHabit.style.display = "none";
   list.innerHTML = "";
 
   let tasks = [];
@@ -463,13 +748,12 @@ function renderTasks() {
   tasks.forEach(task => {
     const div = document.createElement("div");
     div.className = "task-item" + (task.done ? " done" : "") + (isOverdue(task) ? " overdue" : "");
+    const dtLabel = fmtDateTime(task.dueDate, task.notifTime);
     div.innerHTML = `
-      <button class="task-check" data-id="${task.id}" title="完了">
-        ${task.done ? "✓" : ""}
-      </button>
+      <button class="task-check" data-id="${task.id}" title="完了">${task.done ? "✓" : ""}</button>
       <div class="task-info">
         <div class="task-name">${escHtml(task.name)}</div>
-        ${task.dueDate ? `<div class="task-due">${isOverdue(task) ? "⚠️ " : "📅 "}${fmtDate(task.dueDate)}</div>` : ""}
+        ${task.dueDate ? `<div class="task-due">${isOverdue(task) ? "⚠️ " : "📅 "}${dtLabel}${task.notifEnabled ? " 🔔" : ""}</div>` : ""}
       </div>
       <div class="task-actions">
         <button class="task-btn" data-edit="${task.id}" title="編集">✏️</button>
@@ -493,29 +777,126 @@ function renderReport() {
   const plant = getPlant();
   const stage = getPlantStage();
   document.getElementById("rep-plant").textContent = plant.stages[stage] + " " + plant.name + "（" + PLANT_STAGE_LABELS[stage] + "）";
+
+  const repHabits = document.getElementById("rep-habits");
+  if (!state.habits.length) {
+    repHabits.innerHTML = '<div style="color:#aaa;font-size:13px;padding:8px 0">習慣がまだありません</div>';
+  } else {
+    repHabits.innerHTML = state.habits.map(h => {
+      const streak = calcHabitStreak(h);
+      const modeIcon = h.mode === "strict" ? "🔥" : "🌱";
+      const totalDays = Object.keys(h.logs || {}).filter(d => h.logs[d]).length;
+      return `
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #F0E6D3;">
+          <span style="font-size:22px">${modeIcon}</span>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:700;color:#3A3A3A">${escHtml(h.name)}</div>
+            <div style="font-size:11px;color:#9E9E9E;margin-top:2px">${h.mode === "strict" ? "頑張るモード" : "ゆるく頑張るモード"} · 累計${totalDays}日達成</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:20px;font-weight:800;color:#FFB347">${streak}</div>
+            <div style="font-size:10px;color:#9E9E9E">日継続</div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
 }
 
 function escHtml(s) {
-  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
 // ======== Modals ========
 
-function openModal(id) {
-  document.getElementById(id).classList.add("open");
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove("open");
+function openModal(id) { document.getElementById(id).classList.add("open"); }
+function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+
+// ======== Calendar UI ========
+
+let calYear = 0;
+let calMonth = 0;
+let calSelectedDate = "";
+let calTargetInput = ""; // どのモーダルで使うか
+
+function openCalendar(inputId) {
+  calTargetInput = inputId;
+  const existing = document.getElementById(inputId).value;
+  const ref = existing ? new Date(existing + "T00:00:00") : new Date();
+  calYear = ref.getFullYear();
+  calMonth = ref.getMonth();
+  calSelectedDate = existing;
+  renderCalendar();
+  openModal("calendar-modal");
 }
 
-// ---- Task Modal ----
+function renderCalendar() {
+  const label = document.getElementById("cal-month-label");
+  const grid = document.getElementById("cal-grid-body");
+  if (!label || !grid) return;
+
+  const monthNames = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
+  label.textContent = `${calYear}年 ${monthNames[calMonth]}`;
+
+  // first day of month
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const today = todayStr();
+
+  grid.innerHTML = "";
+
+  // padding
+  for (let i = 0; i < firstDay; i++) {
+    const empty = document.createElement("div");
+    empty.className = "cal-day other-month";
+    grid.appendChild(empty);
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const btn = document.createElement("button");
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+    const dow = new Date(calYear, calMonth, day).getDay();
+
+    let cls = "cal-day";
+    if (dateStr === today) cls += " today";
+    if (dateStr === calSelectedDate) cls += " selected";
+    if (dow === 0) cls += " sun-col";
+    if (dow === 6) cls += " sat-col";
+
+    btn.className = cls;
+    btn.textContent = day;
+    btn.addEventListener("click", () => {
+      calSelectedDate = dateStr;
+      document.getElementById(calTargetInput).value = dateStr;
+      // display update
+      const disp = document.getElementById("cal-selected-display");
+      if (disp) disp.textContent = "選択中: " + fmtDate(dateStr);
+      closeModal("calendar-modal");
+    });
+    grid.appendChild(btn);
+  }
+
+  const disp = document.getElementById("cal-selected-display");
+  if (disp) {
+    disp.textContent = calSelectedDate ? "選択中: " + fmtDate(calSelectedDate) : "日付を選んでください";
+  }
+}
+
+// ======== Task Modal ========
+
 let editingTaskId = null;
+let editingHabitId = null;
 
 function openAddTask() {
   editingTaskId = null;
   document.getElementById("task-modal-title").textContent = "タスクを追加";
   document.getElementById("task-name-input").value = "";
   document.getElementById("task-due-input").value = "";
+  document.getElementById("task-time-input").value = "";
+  // 通知トグルリセット
+  const toggle = document.getElementById("task-notif-toggle");
+  toggle.classList.remove("on");
+  toggle.dataset.on = "0";
   openModal("task-modal");
 }
 
@@ -526,6 +907,11 @@ function openEditTask(id) {
   document.getElementById("task-modal-title").textContent = "タスクを編集";
   document.getElementById("task-name-input").value = task.name;
   document.getElementById("task-due-input").value = task.dueDate || "";
+  document.getElementById("task-time-input").value = task.notifTime || "";
+  const toggle = document.getElementById("task-notif-toggle");
+  const on = !!task.notifEnabled;
+  toggle.classList.toggle("on", on);
+  toggle.dataset.on = on ? "1" : "0";
   openModal("task-modal");
 }
 
@@ -533,18 +919,27 @@ function saveTask() {
   const name = document.getElementById("task-name-input").value.trim();
   if (!name) { alert("タスク名を入力してね！"); return; }
   const dueDate = document.getElementById("task-due-input").value;
+  const notifTime = document.getElementById("task-time-input").value;
+  const notifEnabled = document.getElementById("task-notif-toggle").dataset.on === "1";
 
   if (editingTaskId) {
     const task = state.tasks.find(t => t.id === editingTaskId);
-    if (task) { task.name = name; task.dueDate = dueDate; }
+    if (task) {
+      task.name = name;
+      task.dueDate = dueDate;
+      task.notifTime = notifTime;
+      task.notifEnabled = notifEnabled;
+      scheduleNotification(task);
+    }
   } else {
-    state.tasks.push({
+    const task = {
       id: Date.now().toString(),
-      name,
-      dueDate,
-      done: false,
-      completedDate: null
-    });
+      name, dueDate,
+      notifTime, notifEnabled,
+      done: false, completedDate: null
+    };
+    state.tasks.push(task);
+    scheduleNotification(task);
   }
   saveState();
   closeModal("task-modal");
@@ -558,10 +953,23 @@ function deleteTask(id) {
   renderAll();
 }
 
-// ---- Goal Modal ----
+// ======== Habit Modal ========
+
+function openAddHabit() {
+  editingHabitId = null;
+  document.getElementById("habit-modal-title").textContent = "習慣を追加する 🔥";
+  document.getElementById("habit-name-input").value = "";
+  document.getElementById("habit-mode-input").value = "strict";
+  document.querySelectorAll(".mode-btn").forEach(btn => {
+    btn.classList.toggle("selected", btn.dataset.mode === "strict");
+  });
+  openModal("habit-modal");
+}
+
+// ======== Goal Modal ========
+
 function openGoalModal() {
   document.getElementById("goal-text-input").value = state.goal.text;
-  // select category chip
   document.querySelectorAll("#goal-modal .chip").forEach(c => {
     c.classList.toggle("selected", c.dataset.cat === state.goal.category);
   });
@@ -583,7 +991,6 @@ function renderGoalDisplay() {
   const el = document.getElementById("goal-display");
   const cat = document.getElementById("goal-category");
   const txt = document.getElementById("goal-text");
-
   if (state.goal.text) {
     el.classList.remove("empty");
     cat.textContent = state.goal.category || "目標";
@@ -595,7 +1002,8 @@ function renderGoalDisplay() {
   }
 }
 
-// ---- Plant Select Modal ----
+// ======== Plant Modal ========
+
 function openPlantModal() {
   renderPlantOptions();
   openModal("plant-modal");
@@ -627,7 +1035,8 @@ function getPlantStageFor(plant) {
   return 4;
 }
 
-// ---- Tarareba User Messages ----
+// ======== Tarareba User Messages ========
+
 function renderUserTarareba() {
   const list = document.getElementById("user-tr-list");
   list.innerHTML = "";
@@ -679,65 +1088,39 @@ function switchView(view) {
   document.getElementById("home-view").style.display = view === "home" ? "block" : "none";
   document.getElementById("report-view").classList.toggle("visible", view === "report");
   document.getElementById("settings-view").classList.toggle("visible", view === "settings");
-
   document.querySelectorAll(".nav-btn").forEach(b => {
     b.classList.toggle("active", b.dataset.view === view);
   });
-
   if (view === "report") renderReport();
 }
-
-// ======== Menu sheet ========
-
-function openMenu() {
-  openModal("menu-modal");
-}
-
-// ======== Event delegation ========
-
-document.addEventListener("click", e => {
-  // task check
-  const checkBtn = e.target.closest("[data-id]");
-  if (checkBtn && checkBtn.classList.contains("task-check")) {
-    completeTask(checkBtn.dataset.id);
-    return;
-  }
-
-  // task edit
-  const editBtn = e.target.closest("[data-edit]");
-  if (editBtn) { openEditTask(editBtn.dataset.edit); return; }
-
-  // task delete
-  const delBtn = e.target.closest("[data-del]");
-  if (delBtn) { deleteTask(delBtn.dataset.del); return; }
-
-  // tarareba delete
-  const trDel = e.target.closest("[data-type][data-id]");
-  if (trDel && trDel.classList.contains("tui-del")) {
-    deleteUserTarareba(trDel.dataset.type, trDel.dataset.id);
-    return;
-  }
-});
 
 // ======== Init ========
 
 document.addEventListener("DOMContentLoaded", () => {
+  // PWA service worker 登録
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./service-worker.js").catch(console.error);
+  }
+
   dailyCheck();
 
-  // Today word
   const word = TODAY_WORDS[Math.floor(Math.random() * TODAY_WORDS.length)];
   document.getElementById("word-today").textContent = word;
 
-  // Date display
   const now = new Date();
   const days = ["日","月","火","水","木","金","土"];
   document.getElementById("date-display").textContent =
     `${now.getMonth()+1}月${now.getDate()}日（${days[now.getDay()]}）`;
 
-  // Goal display
   renderGoalDisplay();
 
-  // Task tabs
+  // 通知バナー
+  showNotifBanner();
+
+  // 通知済みタスクを再スケジュール
+  scheduleAllNotifications();
+
+  // タブ切り替え
   document.querySelectorAll(".task-tab").forEach(btn => {
     btn.addEventListener("click", () => {
       currentTab = btn.dataset.tab;
@@ -747,40 +1130,78 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Add task button
   document.getElementById("btn-add-task").addEventListener("click", openAddTask);
-
-  // Goal button
+  document.getElementById("btn-add-habit").addEventListener("click", openAddHabit);
   document.getElementById("btn-set-goal").addEventListener("click", openGoalModal);
   document.getElementById("goal-display").addEventListener("click", openGoalModal);
-
-  // Plant select button
   document.getElementById("plant-select-btn").addEventListener("click", openPlantModal);
 
-  // Bottom nav
   document.querySelectorAll(".nav-btn").forEach(btn => {
     btn.addEventListener("click", () => switchView(btn.dataset.view));
   });
 
-  // Menu button
-  document.getElementById("menu-btn").addEventListener("click", openMenu);
+  document.getElementById("menu-btn").addEventListener("click", () => openModal("menu-modal"));
 
-  // Modal close buttons
   document.querySelectorAll("[data-close-modal]").forEach(btn => {
     btn.addEventListener("click", () => closeModal(btn.dataset.closeModal));
   });
 
-  // Modal overlay close
   document.querySelectorAll(".modal-overlay").forEach(overlay => {
     overlay.addEventListener("click", e => {
       if (e.target === overlay) closeModal(overlay.id);
     });
   });
 
-  // Task save
   document.getElementById("btn-save-task").addEventListener("click", saveTask);
+  document.getElementById("btn-save-habit").addEventListener("click", saveHabit);
 
-  // Goal chips
+  // カレンダーボタン
+  document.getElementById("btn-open-cal-task").addEventListener("click", () => {
+    openCalendar("task-due-input");
+  });
+
+  // カレンダーナビ
+  document.getElementById("cal-prev-btn").addEventListener("click", () => {
+    calMonth--;
+    if (calMonth < 0) { calMonth = 11; calYear--; }
+    renderCalendar();
+  });
+  document.getElementById("cal-next-btn").addEventListener("click", () => {
+    calMonth++;
+    if (calMonth > 11) { calMonth = 0; calYear++; }
+    renderCalendar();
+  });
+
+  // 通知トグル
+  document.getElementById("task-notif-toggle").addEventListener("click", function() {
+    const on = this.dataset.on === "1";
+    if (!on && Notification.permission !== "granted") {
+      requestNotificationPermission();
+    }
+    this.classList.toggle("on", !on);
+    this.dataset.on = on ? "0" : "1";
+  });
+
+  // 通知バナーボタン
+  document.getElementById("notif-allow-btn")?.addEventListener("click", () => {
+    requestNotificationPermission();
+  });
+  document.getElementById("notif-dismiss-btn")?.addEventListener("click", () => {
+    state.notifDismissed = true;
+    saveState();
+    hideBanner();
+  });
+
+  // 習慣モードボタン
+  document.querySelectorAll(".mode-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      document.getElementById("habit-mode-input").value = btn.dataset.mode;
+    });
+  });
+
+  // 目標カテゴリチップ
   document.querySelectorAll("#goal-modal .chip").forEach(chip => {
     chip.addEventListener("click", () => {
       document.querySelectorAll("#goal-modal .chip").forEach(c => c.classList.remove("selected"));
@@ -788,38 +1209,39 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Goal save
   document.getElementById("btn-save-goal").addEventListener("click", saveGoal);
 
-  // Tarareba close
+  // タラレバカード閉じる
   document.querySelector("#tarareba-card .tr-close").addEventListener("click", () => {
     document.getElementById("tarareba-overlay").classList.remove("open");
   });
-
-  // Tarareba overlay click
   document.getElementById("tarareba-overlay").addEventListener("click", e => {
     if (e.target === document.getElementById("tarareba-overlay")) {
       document.getElementById("tarareba-overlay").classList.remove("open");
     }
   });
 
-  // User tarareba
+  // 日跨ぎタラレバ閉じる
+  document.querySelector("#daily-tarareba-card .dtr-close").addEventListener("click", () => {
+    document.getElementById("daily-tarareba-overlay").classList.remove("open");
+  });
+  document.getElementById("daily-tarareba-overlay").addEventListener("click", e => {
+    if (e.target === document.getElementById("daily-tarareba-overlay")) {
+      document.getElementById("daily-tarareba-overlay").classList.remove("open");
+    }
+  });
+
   document.getElementById("btn-add-tr").addEventListener("click", addUserTarareba);
 
-  // Settings items
   document.getElementById("settings-tr-btn").addEventListener("click", () => {
     renderUserTarareba();
     openModal("tr-modal");
   });
-
-  document.getElementById("settings-plant-btn").addEventListener("click", () => {
-    openPlantModal();
+  document.getElementById("settings-plant-btn").addEventListener("click", openPlantModal);
+  document.getElementById("settings-goal-btn").addEventListener("click", openGoalModal);
+  document.getElementById("settings-notif-btn").addEventListener("click", () => {
+    requestNotificationPermission();
   });
-
-  document.getElementById("settings-goal-btn").addEventListener("click", () => {
-    openGoalModal();
-  });
-
   document.getElementById("settings-reset-btn").addEventListener("click", () => {
     if (confirm("すべてのデータをリセットしますか？")) {
       localStorage.removeItem("haretasu_state");
@@ -830,28 +1252,54 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Test tara button (from menu)
   document.getElementById("menu-tara-btn")?.addEventListener("click", () => {
     closeModal("menu-modal");
-    const cat = state.goal.category || "その他";
-    showTarareba("tara", cat);
+    showTarareba("tara", state.goal.category || "その他");
   });
   document.getElementById("menu-reba-btn")?.addEventListener("click", () => {
     closeModal("menu-modal");
-    const cat = state.goal.category || "その他";
-    showTarareba("reba", cat);
+    showTarareba("reba", state.goal.category || "その他");
   });
 
   renderAll();
-
-  // PWA service worker
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./service-worker.js").catch(() => {});
-  }
 });
-// ★通知を閉じるボタンの処理（一番最後に追加）
+
+// ======== Event delegation ========
+
 document.addEventListener("click", e => {
-  if (e.target.closest(".tr-close")) {
-    document.getElementById("tarareba-overlay")?.classList.remove("open");
+  const checkBtn = e.target.closest("[data-id]");
+  if (checkBtn && checkBtn.classList.contains("task-check")) {
+    completeTask(checkBtn.dataset.id);
+    return;
+  }
+  const editBtn = e.target.closest("[data-edit]");
+  if (editBtn && !editBtn.dataset.habitEdit) {
+    openEditTask(editBtn.dataset.edit);
+    return;
+  }
+  const delBtn = e.target.closest("[data-del]");
+  if (delBtn && !delBtn.dataset.habitDel) {
+    deleteTask(delBtn.dataset.del);
+    return;
+  }
+  const habitCheck = e.target.closest("[data-habit-id]");
+  if (habitCheck) {
+    completeHabit(habitCheck.dataset.habitId);
+    return;
+  }
+  const habitEdit = e.target.closest("[data-habit-edit]");
+  if (habitEdit) {
+    openEditHabit(habitEdit.dataset.habitEdit);
+    return;
+  }
+  const habitDel = e.target.closest("[data-habit-del]");
+  if (habitDel) {
+    deleteHabit(habitDel.dataset.habitDel);
+    return;
+  }
+  const trDel = e.target.closest("[data-type][data-id]");
+  if (trDel && trDel.classList.contains("tui-del")) {
+    deleteUserTarareba(trDel.dataset.type, trDel.dataset.id);
+    return;
   }
 });
